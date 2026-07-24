@@ -370,3 +370,4 @@ impl MusicLibraryState {
         draw_text("Press [R] to Rescan | [ESC] Dashboard", content_x, screen_height() - 15.0, 12.0, GRAY);
     }
 }
+// music playback sync
