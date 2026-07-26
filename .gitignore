@@ -1,0 +1,7 @@
+/target
+/LocalStorage
+**/*.rs.bk
+Cargo.lock
+settings.json
+workspace_activity.log
+downloads/

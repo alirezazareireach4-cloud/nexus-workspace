@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSV32L6FJL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-YSV32L6FJL');
+    </script>
+
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/assets/favicon-1259fa50.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>درگاه پرداخت اینترنتی زرین‌پال</title>
+  <script type="module" crossorigin src="/assets/index-1a46efbc.js"></script>
+  <link rel="stylesheet" href="/assets/index-f3a22779.css">
+</head>
+
+<body>
+    <div id="app"></div>
+    
+</body>
+
+</html>
