@@ -91,7 +91,6 @@ impl SettingsState {
 
         let mut item_y = box_y + 25.0;
 
-        // تنظیم ۱: حالت تاریک / روشن (Theme)
         draw_text("Dark Mode Theme", content_x + 20.0, item_y + 18.0, 14.0, WHITE);
         let theme_btn = Rect::new(content_x + 480.0, item_y, 110.0, 28.0);
         let theme_hover = theme_btn.contains(mouse_pos.into());
@@ -109,7 +108,6 @@ impl SettingsState {
 
         item_y += 60.0;
 
-        // تنظیم ۲: اسلایدر ولوم صدا (Master Volume)
         draw_text(&format!("Master Volume: {:.0}%", self.config.master_volume), content_x + 20.0, item_y + 18.0, 14.0, WHITE);
         let slider_x = content_x + 250.0;
         let slider_y = item_y + 8.0;
@@ -130,7 +128,6 @@ impl SettingsState {
 
         item_y += 60.0;
 
-        // تنظیم ۳: اسکن خودکار موزیک
         draw_text("Auto-Scan Music on Startup", content_x + 20.0, item_y + 18.0, 14.0, WHITE);
         let scan_btn = Rect::new(content_x + 480.0, item_y, 110.0, 28.0);
         let scan_hover = scan_btn.contains(mouse_pos.into());
@@ -148,12 +145,10 @@ impl SettingsState {
 
         item_y += 60.0;
 
-        // تنظیم ۴: نمایش مسیر دانلودها و پورت شبکه
         draw_text(&format!("Default Download Path: {}", self.config.download_path), content_x + 20.0, item_y + 18.0, 13.0, LIGHTGRAY);
         item_y += 40.0;
         draw_text(&format!("Network Discovery Port: {}", self.config.network_port), content_x + 20.0, item_y + 18.0, 13.0, LIGHTGRAY);
 
-        // دکمه بازنشانی به تنظیمات پیش‌فرض
         let reset_btn = Rect::new(content_x + 20.0, box_y + box_h - 50.0, 160.0, 32.0);
         let reset_hover = reset_btn.contains(mouse_pos.into());
         let reset_col = if reset_hover { Color::new(0.5, 0.2, 0.2, 1.0) } else { Color::new(0.35, 0.15, 0.15, 1.0) };
@@ -168,13 +163,11 @@ impl SettingsState {
             notifications.push("Settings reset to factory defaults.", NotificationKind::Warning);
         }
 
-        // پیام وضعیت پایین صفحه
         draw_text(&self.status_message, content_x, box_y + box_h + 25.0, 13.0, YELLOW);
         draw_text("Press [ESC] to return to Dashboard", content_x, screen_height() - 15.0, 12.0, GRAY);
     }
 }
 
-// تابع کمکی برای پارس فایل تنظیمات
 fn serde_json_from_str_custom(data: &str) -> Result<SettingsConfig, ()> {
     let mut config = SettingsConfig::default();
     for line in data.lines() {
