@@ -199,3 +199,5 @@ fn serde_json_from_str_custom(data: &str) -> Result<SettingsConfig, ()> {
     Ok(config)
 }
 // json serialization sync
+
+// volume slider sync
