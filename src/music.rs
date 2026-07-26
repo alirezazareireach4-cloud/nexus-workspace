@@ -27,10 +27,9 @@ pub struct MusicLibraryState {
     scan_status: String,
     target_dir: String,
 
-    // مدیریت زمان و پیشرفت واقعی
     playback_duration: Duration,
     playback_position: Duration,
-    track_started_instant: f64, // زمان شروع پخش بر اساس فریم‌های macroquad
+    track_started_instant: f64,
 }
 
 impl MusicLibraryState {
@@ -133,7 +132,7 @@ impl MusicLibraryState {
         }
     }
 
-    // پخش موزیک و استخراج مدت زمان واقعی کل آهنگ
+
     fn play_current_track(&mut self) {
         if self.tracks.is_empty() {
             return;
@@ -146,7 +145,7 @@ impl MusicLibraryState {
             if let Ok(file) = File::open(track_path) {
                 let reader = BufReader::new(file);
                 if let Ok(source) = Decoder::new(reader) {
-                    // ذخیره مدت زمان کل آهنگ
+
                     self.playback_duration = source.total_duration().unwrap_or(Duration::from_secs(180));
                     self.playback_position = Duration::from_secs(0);
                     self.track_started_instant = get_time();
@@ -163,7 +162,7 @@ impl MusicLibraryState {
         }
     }
 
-    // تابع جدید برای پرش به ثانیه دلخواه (Seek واقعی)
+
     fn seek_to_position(&mut self, target_progress: f32) {
         if self.tracks.is_empty() {
             return;
@@ -181,7 +180,7 @@ impl MusicLibraryState {
             if let Ok(file) = File::open(track_path) {
                 let reader = BufReader::new(file);
                 if let Ok(source) = Decoder::new(reader) {
-                    // پرش منبع صوتی به موقعیت جدید
+
                     let target_duration = Duration::from_secs_f32(target_secs);
                     let skipped_source = source.skip_duration(target_duration);
 
@@ -218,7 +217,7 @@ impl MusicLibraryState {
         draw_text("🎵 Smart Music Center (Real Seek & Duration)", content_x, 95.0, 20.0, MAGENTA);
         draw_text(&self.scan_status, content_x, 120.0, 13.0, SKYBLUE);
 
-        // محاسبه دقیق زمان پیشرفت آهنگ بر اساس زمان واقعی سیستم
+
         if self.is_playing {
             let elapsed = get_time() - self.track_started_instant;
             self.playback_position = Duration::from_secs_f32(elapsed as f32);
@@ -285,7 +284,7 @@ impl MusicLibraryState {
             self.scan_music_directory(&dir);
         }
 
-        // پنل کنترل پایین صفحه
+
         let control_y = screen_height() - 140.0;
         draw_rectangle(content_x, control_y, 620.0, 115.0, Color::new(0.08, 0.05, 0.15, 1.0));
         draw_rectangle_lines(content_x, control_y, 620.0, 115.0, 1.0, Color::new(0.3, 0.15, 0.45, 1.0));
@@ -295,7 +294,7 @@ impl MusicLibraryState {
             let current_title = self.tracks[self.current_track].title.clone();
             let cover_texture = self.tracks[self.current_track].cover_texture.clone();
 
-            // تصویر کاور آلبوم
+
             let cover_rect = Rect::new(content_x + 12.0, control_y + 12.0, 90.0, 90.0);
             draw_rectangle(cover_rect.x, cover_rect.y, cover_rect.w, cover_rect.h, Color::new(0.04, 0.02, 0.08, 1.0));
 
@@ -315,7 +314,7 @@ impl MusicLibraryState {
             }
             draw_rectangle_lines(cover_rect.x, cover_rect.y, cover_rect.w, cover_rect.h, 1.0, Color::new(0.3, 0.2, 0.4, 1.0));
 
-            // دکمه Play / Pause
+
             let play_pause_btn = Rect::new(content_x + 115.0, control_y + 15.0, 80.0, 30.0);
             let btn_hovered = play_pause_btn.contains(mouse_pos.into());
             let btn_col = if btn_hovered { Color::new(0.4, 0.2, 0.6, 1.0) } else { Color::new(0.3, 0.15, 0.45, 1.0) };
@@ -331,12 +330,12 @@ impl MusicLibraryState {
             let info_msg = format!("Playing: {} - {}", current_artist, current_title);
             draw_text(&info_msg, content_x + 210.0, control_y + 35.0, 13.0, SKYBLUE);
 
-            // محاسبه درصد پیشرفت بر اساس زمان واقعی
+
             let current_secs = self.playback_position.as_secs_f32();
             let total_secs = self.playback_duration.as_secs_f32();
             let progress_ratio = if total_secs > 0.0 { (current_secs / total_secs).clamp(0.0, 1.0) } else { 0.0 };
 
-            // نوار پیشرفت واقعی و تعاملی (Seek Bar)
+
             let bar_x = content_x + 115.0;
             let bar_y = control_y + 75.0;
             let bar_w = 485.0;
@@ -351,7 +350,7 @@ impl MusicLibraryState {
             draw_rectangle(bar_x, bar_y, filled_w, bar_h, MAGENTA);
             draw_rectangle_lines(bar_x, bar_y, bar_w, bar_h, 1.0, Color::new(0.4, 0.2, 0.6, 1.0));
 
-            // نمایش زمان سپری شده / کل زمان آهنگ (مثلا 01:23 / 03:45)
+
             let cur_min = (current_secs as u32) / 60;
             let cur_sec = (current_secs as u32) % 60;
             let tot_min = (total_secs as u32) / 60;
@@ -359,7 +358,7 @@ impl MusicLibraryState {
             let time_str = format!("{:02}:{:02} / {:02}:{:02}", cur_min, cur_sec, tot_min, tot_sec);
             draw_text(&time_str, bar_x + bar_w - 90.0, bar_y - 8.0, 11.0, LIGHTGRAY);
 
-            // قابلیت کلیک روی هر جای نوار برای پرش به همان ثانیه از آهنگ
+
             if seek_hovered && clicked {
                 let click_x = mouse_pos.0 - bar_x;
                 let clicked_ratio = (click_x / bar_w).clamp(0.0, 1.0);

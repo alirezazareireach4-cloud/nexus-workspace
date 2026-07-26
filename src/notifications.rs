@@ -29,14 +29,14 @@ impl NotificationCenter {
     pub fn new() -> Self {
         let log_file_path = "workspace_activity.log".to_string();
 
-        // اطمینان از وجود فایل لاگ اولیه
+
         if !Path::new(&log_file_path).exists() {
             let _ = File::create(&log_file_path);
         }
 
         let mut center = Self {
             notifications: Vec::new(),
-            max_history: 100, // افزایش ظرفیت تاریخچه برای پوشش تمام ماژول‌ها
+            max_history: 100,
             log_file_path,
         };
 
@@ -44,7 +44,7 @@ impl NotificationCenter {
         center
     }
 
-    // ثبت اعلان جدید در حافظه و ذخیره خودکار در فایل لاگ دیسک
+
     pub fn push(&mut self, msg: &str, kind: NotificationKind) {
         let now: DateTime<Local> = Local::now();
         let time_str = now.format("%Y-%m-%d %H:%M:%S").to_string();
@@ -56,7 +56,7 @@ impl NotificationCenter {
             NotificationKind::Info    => "[INFO]",
         };
 
-        // ذخیره در فایل لاگ فیزیکی روی دیسک
+
         if let Ok(mut file) = std::fs::OpenOptions::new()
             .create(true)
             .append(true)
@@ -66,7 +66,7 @@ impl NotificationCenter {
             let _ = file.write_all(log_line.as_bytes());
         }
 
-        // درج در لیست داخلی رابط کاربری
+
         let short_time_str = now.format("%H:%M:%S").to_string();
         self.notifications.insert(0, NotificationItem {
             message: msg.to_string(),
@@ -88,7 +88,7 @@ impl NotificationCenter {
         draw_text("🔔 Notification Center & Activity History", content_x, 95.0, 20.0, MAGENTA);
         draw_text("Tracks all background workspace activities, file operations, and audio events in real-time.", content_x, 120.0, 13.0, SKYBLUE);
 
-        // دکمه پاک کردن تاریخچه
+
         let clear_btn = Rect::new(content_x + 480.0, 100.0, 140.0, 30.0);
         let mouse_pos = mouse_position();
         let clicked = is_mouse_button_pressed(MouseButton::Left);
@@ -138,11 +138,11 @@ impl NotificationCenter {
                 };
 
                 draw_rectangle(item_rect.x, item_rect.y, item_rect.w, item_rect.h, bg_color);
-                // نوار رنگی نشانگر نوع رویداد در سمت چپ
+
                 draw_rectangle(item_rect.x, item_rect.y, 4.0, item_rect.h, accent_color);
                 draw_rectangle_lines(item_rect.x, item_rect.y, item_rect.w, item_rect.h, 1.0, Color::new(0.25, 0.18, 0.35, 1.0));
 
-                // نمایش زمان و متن رویداد
+
                 let time_text = format!("[{}]", item.timestamp);
                 draw_text(&time_text, item_rect.x + 15.0, item_rect.y + 24.0, 12.0, LIGHTGRAY);
                 draw_text(&item.message, item_rect.x + 85.0, item_rect.y + 24.0, 13.0, WHITE);

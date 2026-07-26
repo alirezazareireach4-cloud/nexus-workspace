@@ -39,7 +39,7 @@ impl NotesState {
             let _ = fs::create_dir_all(STORAGE_DIR);
         }
 
-        // خواندن تمام فایل‌های داخل پوشه notes
+
         if let Ok(entries) = fs::read_dir(STORAGE_DIR) {
             let mut max_id = 0;
             for entry in entries.flatten() {
@@ -64,7 +64,7 @@ impl NotesState {
             state.next_id = max_id;
         }
 
-        // اگر پوشه کاملاً خالی بود، اجازه می‌دهیم لیست خالی بماند و کاربر خودش نوت جدید بسازد
+
         if !state.notes.is_empty() {
             state.selected_id = Some(state.notes[0].id);
         }
@@ -178,7 +178,7 @@ impl NotesState {
         if let Some(sel) = sel_id {
             let current_note_title = self.notes.iter().find(|n| n.id == sel).map(|n| n.title.clone()).unwrap_or_default();
 
-            // شرط محدودیت تعداد نوت برداشته شد؛ حالا آخرین نوت هم قابل حذف است
+
             let del_btn_rect = Rect::new(editor_x + editor_w - 80.0, editor_y + 18.0, 80.0, 28.0);
             if gui_button(del_btn_rect, "Delete", mouse_pos) {
                 delete_target = Some(sel);
@@ -258,7 +258,7 @@ impl NotesState {
                 }
             }
         } else {
-            // اگر هیچ نوتی انتخاب نشده باشد یا لیست خالی باشد، راهنمایی نمایش می‌دهد
+
             draw_text("No note selected. Click '+ New Note' to start.", editor_x + 20.0, editor_y + 100.0, 14.0, GRAY);
         }
 

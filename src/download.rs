@@ -47,7 +47,7 @@ impl DownloaderState {
     }
 
     pub fn update(&mut self, content_x: f32) {
-        // به‌روزرسانی وضعیت دانلودها از تردهای پس‌زمینه
+
         for item in &mut self.downloads {
             while let Ok(update) = item.receiver.try_recv() {
                 match update {
@@ -87,11 +87,11 @@ impl DownloaderState {
         let box_h = 420.0;
         let box_y = 180.0;
 
-        // عنوان بالا
+
         draw_text("📥 Advanced Download Manager", content_x, 80.0, 22.0, BLUE);
         draw_text("Enter Download URL:", content_x, 115.0, 14.0, LIGHTGRAY);
 
-        // تنظیم عرض کادر اینپوت با احتساب دکمه Paste و Add
+
         let input_w = box_w - 185.0;
         let input_rect = Rect::new(content_x, 130.0, input_w, 32.0);
         draw_rectangle(input_rect.x, input_rect.y, input_rect.w, input_rect.h, Color::new(0.1, 0.12, 0.18, 1.0));
@@ -105,7 +105,7 @@ impl DownloaderState {
         let text_color = if self.download_url.is_empty() { GRAY } else { WHITE };
         draw_text(&display_text, input_rect.x + 10.0, input_rect.y + 21.0, 14.0, text_color);
 
-        // تایپ مستقیم با کیبورد
+
         let chars = get_char_pressed();
         for c in chars {
             if c == '\u{8}' {
@@ -115,7 +115,7 @@ impl DownloaderState {
             }
         }
 
-        // بررسی میانبر Ctrl+V
+
         if is_key_down(KeyCode::LeftControl) || is_key_down(KeyCode::RightControl) {
             if is_key_pressed(KeyCode::V) {
                 if let Some(clip) = macroquad::window::miniquad::window::clipboard_get() {
@@ -126,7 +126,7 @@ impl DownloaderState {
             }
         }
 
-        // دکمه Paste
+
         let paste_btn_rect = Rect::new(content_x + input_w + 5.0, 130.0, 75.0, 32.0);
         if gui_button(paste_btn_rect, "Paste", mouse_pos) {
             if let Some(clip) = macroquad::window::miniquad::window::clipboard_get() {
@@ -136,20 +136,20 @@ impl DownloaderState {
             }
         }
 
-        // دکمه افزودن دانلود جدید
+
         let add_btn_rect = Rect::new(content_x + box_w - 100.0, 130.0, 100.0, 32.0);
         if gui_button(add_btn_rect, "+ Add", mouse_pos) && !self.download_url.is_empty() {
             self.start_new_download(self.download_url.clone());
             self.download_url.clear();
         }
 
-        // کادر اصلی لیست دانلودها
+
         draw_rectangle(content_x, box_y, box_w, box_h, Color::new(0.05, 0.07, 0.12, 1.0));
         draw_rectangle_lines(content_x, box_y, box_w, box_h, 1.5, BLUE);
 
         draw_text("Active & Paused Downloads:", content_x + 15.0, box_y + 30.0, 16.0, WHITE);
 
-        // نمایش لیست دانلودها داخل کادر
+
         let mut item_y = box_y + 55.0;
         let mut action_to_remove = None;
 
@@ -158,11 +158,11 @@ impl DownloaderState {
             draw_rectangle(row_rect.x, row_rect.y, row_rect.w, row_rect.h, Color::new(0.08, 0.1, 0.16, 1.0));
             draw_rectangle_lines(row_rect.x, row_rect.y, row_rect.w, row_rect.h, 1.0, Color::new(0.2, 0.3, 0.4, 1.0));
 
-            // نام فایل و وضعیت
+
             draw_text(&format!("[{}] {}", item.id, item.filename), row_rect.x + 10.0, row_rect.y + 20.0, 14.0, WHITE);
             draw_text(&item.status, row_rect.x + 10.0, row_rect.y + 45.0, 12.0, YELLOW);
 
-            // نوار پیشرفت کوچک برای هر آیتم
+
             let bar_x = row_rect.x + 240.0;
             let bar_y = row_rect.y + 15.0;
             let bar_w = 180.0;
@@ -175,7 +175,7 @@ impl DownloaderState {
             draw_rectangle_lines(bar_x, bar_y, bar_w, bar_h, 1.0, LIGHTGRAY);
             draw_text(&format!("{}%", (item.progress * 100.0) as i32), bar_x + bar_w + 8.0, bar_y + 13.0, 12.0, WHITE);
 
-            // دکمه‌های کنترل (Pause / Resume / Cancel)
+
             let btn_x = row_rect.x + row_rect.w - 225.0;
             let btn_y = row_rect.y + 15.0;
 
@@ -261,17 +261,17 @@ impl DownloaderState {
                     }
                 };
 
-                // بررسی فایل محلی برای جلوگیری از خطای 416 (اگر فایل قبلاً کامل بود، آن را پاک می‌کنیم تا از نو دانلود شود)
+
                 let mut downloaded_bytes = 0u64;
                 if let Ok(metadata) = std::fs::metadata(&clean_name) {
                     downloaded_bytes = metadata.len();
                 }
 
-                // ارسال درخواست اولیه به سرور برای دریافت سایز کل فایل
+
                 let head_resp = client.head(&url).send().await;
                 if let Ok(hr) = head_resp {
                     if let Some(total_len) = hr.content_length() {
-                        // اگر سایز فایل موجود روی سیستم مساوی یا بیشتر از حجم کل سرور بود، یعنی قبلاً کامل دانلود شده
+
                         if downloaded_bytes >= total_len && total_len > 0 {
                             let _ = std::fs::remove_file(&clean_name);
                             downloaded_bytes = 0;
@@ -293,7 +293,7 @@ impl DownloaderState {
                 };
 
                 if !resp.status().is_success() && resp.status() != reqwest::StatusCode::PARTIAL_CONTENT {
-                    // اگر باز هم خطای 416 یا مشابه داد، فایل را پاک کرده و از اول تلاش می‌کنیم
+
                     if resp.status() == reqwest::StatusCode::RANGE_NOT_SATISFIABLE {
                         let _ = std::fs::remove_file(&clean_name);
                         let _ = tx.send(DownloadUpdate::Failed("Range error fixed, please restart download.".to_string()));
