@@ -42,7 +42,6 @@ async fn main() {
     notifications_app.push("System Workspace initialized successfully.", NotificationKind::Success);
 
     loop {
-        // اعمال تم تاریک یا روشن بر اساس تنظیمات واقعی ذخیره شده روی دیسک
         let is_dark = settings_app.config.theme_dark;
 
         let bg_color = if is_dark { Color::new(0.08, 0.06, 0.14, 1.0) } else { Color::new(0.9, 0.9, 0.95, 1.0) };
@@ -53,9 +52,7 @@ async fn main() {
 
         clear_background(bg_color);
 
-        // ==========================================
-        // ۱. منوی کناری (Sidebar)
-        // ==========================================
+        
         draw_rectangle(0.0, 0.0, 240.0, screen_height(), sidebar_bg);
         draw_line(240.0, 0.0, 240.0, screen_height(), 1.5, line_color);
 
@@ -99,16 +96,10 @@ async fn main() {
         draw_text("Alireza Zarei", 25.0, screen_height() - 48.0, 13.0, text_main);
         draw_text("Computer Engineering", 25.0, screen_height() - 28.0, 11.0, text_sub);
 
-        // ==========================================
-        // ۲. هدر بالا (Top Bar)
-        // ==========================================
         draw_rectangle(240.0, 0.0, screen_width() - 240.0, 60.0, sidebar_bg);
         draw_line(240.0, 60.0, screen_width(), 60.0, 1.5, line_color);
         draw_text("System Status: [ACTIVE & RUNNING]", 270.0, 36.0, 14.0, GREEN);
 
-        // ==========================================
-        // ۳. محتوای صفحات
-        // ==========================================
         let content_x = 270.0;
 
         match current_state {
@@ -250,7 +241,6 @@ async fn main() {
             }
 
             AppState::Settings => {
-                // پاس دادن notifications برای ذخیره سازی
                 settings_app.update(content_x, &mut notifications_app);
             }
         }
