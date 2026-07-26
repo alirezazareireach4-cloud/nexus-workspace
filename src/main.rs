@@ -277,3 +277,4 @@ fn gui_button_custom(rect: Rect, text: &str, mouse: (f32, f32)) -> bool {
 
     clicked
 }
+// theme colors sync
