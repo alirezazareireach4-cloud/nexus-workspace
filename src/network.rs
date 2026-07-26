@@ -256,3 +256,5 @@ impl NetworkState {
 // tcp listener sync
 
 // rfd dialog sync
+
+// stream optimization sync
